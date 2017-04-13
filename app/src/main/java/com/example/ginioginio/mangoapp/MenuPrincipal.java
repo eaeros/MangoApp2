@@ -92,8 +92,8 @@ public class MenuPrincipal extends AppCompatActivity
             startActivityForResult(camara,0);
 
         } else if (id == R.id.nav_gallery) {
-
-
+            Intent intent = new Intent(this, camera.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

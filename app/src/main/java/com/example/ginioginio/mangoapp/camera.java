@@ -9,6 +9,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -32,6 +33,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     private CameraBridgeViewBase mOpenCvCameraView;
     public Mat img=null,imgt=null;
     private EditText intCapturas;
+    String capturas_t;
     String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     public void iniciar(View view){
         Thread serverThread = null;
         if(!intCapturas.getText().toString().equals("") && !intCapturas.getText().toString().equals("0")){
+            capturas_t = intCapturas.getText().toString();
+            intCapturas.setText("");
             serverThread = new Thread(new ServerThread());
             serverThread.start();
         }else{
@@ -144,12 +148,12 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardar(nombre);
                 try {
-                    Thread.sleep(1000/Integer.parseInt(intCapturas.getText().toString()));
+                    Thread.sleep(1000/Integer.parseInt(capturas_t));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-                if (capturas == Integer.parseInt(intCapturas.getText().toString())){
+                if (capturas == Integer.parseInt(capturas_t)){
                     break;
                 }
             }
@@ -198,6 +202,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             }
         }else{
             Log.d("OPENCV", "No sd");
+
         }
     }
 }

@@ -169,7 +169,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         FileOutputStream out = null;
 
         //File sd = new File(Environment.getExternalStorageDirectory() + "/"+path);
-        File sd = new File("sdcard/"+path);
+        File sd = new File("sdcard/mangoApp/"+path);
         boolean success = true;
         if (!sd.exists()) {
             success = sd.mkdir();

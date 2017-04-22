@@ -86,14 +86,14 @@ public class MenuPrincipal extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            /*Intent camara = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File archivo = new ManejoArchivo().getArchivo();
             camara.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(archivo));
-            startActivityForResult(camara,0);
-
-        } else if (id == R.id.nav_gallery) {
+            startActivityForResult(camara,0);*/
             Intent intent = new Intent(this, camera.class);
             startActivity(intent);
+        } else if (id == R.id.nav_gallery) {
+
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

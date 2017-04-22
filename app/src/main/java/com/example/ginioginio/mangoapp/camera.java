@@ -25,12 +25,14 @@ import org.opencv.imgproc.Imgproc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class camera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private CameraBridgeViewBase mOpenCvCameraView;
     public Mat img=null,imgt=null;
     private EditText intCapturas;
-
+    String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,8 +134,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     class ServerThread implements Runnable {
 
         public void run() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            path = sdf.format(new Date());
             int capturas = 0;
-            String nombre = "";
+            String nombre;
             while (!Thread.currentThread().isInterrupted()) {
                 capturas++;
                 nombre = "Captura"+capturas+".png";
@@ -164,7 +168,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         FileOutputStream out = null;
 
-        File sd = new File(Environment.getExternalStorageDirectory() + "/mango");
+        File sd = new File(Environment.getExternalStorageDirectory() + "/"+path);
         boolean success = true;
         if (!sd.exists()) {
             success = sd.mkdir();

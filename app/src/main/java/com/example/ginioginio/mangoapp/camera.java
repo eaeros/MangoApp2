@@ -20,6 +20,9 @@ import org.opencv.core.Core;
 import org.opencv.core.CvException;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -27,7 +30,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Vector;
 
 public class camera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private CameraBridgeViewBase mOpenCvCameraView;
@@ -118,6 +125,48 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         Core.transpose(inputFrame.rgba(), imgt);
         Imgproc.resize(imgt, img, img.size(), 0, 0, 0);
         Core.flip(img, img, 1);
+
+        Vector<Mat> spl = new Vector<>(3);
+        Core.split(img,spl);//ARGB
+
+        img = spl.get(1);
+
+        Imgproc.rectangle(img, new Point(10, 40), new Point((img.width()/2)-10, img.height()-40),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point((img.width()/2)+10, 40), new Point((img.width())-10, img.height()-40),new Scalar(0, 255, 0));
+
+        Rect rect1 = new Rect(10, 40, (img.width()/2)-10, img.height()-40);
+        Mat img1 = img.submat(rect1); //= new Mat(img, rect1);
+
+        int size = (int) img1.total() * img1.channels();
+        double[] buff;
+
+        double avg1 = 0;
+        for(int i = 0; i < img1.height(); i++)
+        {
+            for(int j = 0; j < img1.width(); j++){
+                buff = img1.get(i,j);
+                avg1  += buff[0];
+            }
+
+        }
+        avg1 = avg1/size;
+
+        Rect rect2 = new Rect((img.width()/2)+10, 40, (img.width()/2)-10, img.height()-40);
+        Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
+
+        double avg2 = 0;
+        for(int i = 0; i < img2.height(); i++)
+        {
+            for(int j = 0; j < img2.width(); j++){
+                buff = img2.get(i,j);
+                avg2  += buff[0];
+            }
+
+        }
+        avg2 = avg2/size;
+
+        Imgproc.putText(img, String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        Imgproc.putText(img, String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
 
         return img;
     }

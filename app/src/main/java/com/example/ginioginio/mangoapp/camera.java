@@ -239,7 +239,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         FileOutputStream out = null;
 
         //File sd = new File(Environment.getExternalStorageDirectory() + "/"+path);
-        File sd = new File("sdcard/mangoApp");
+        File sd = new File("sdcard/mangoApp/"+path);
         boolean success = true;
         if (!sd.exists()) {
             success = sd.mkdir();
@@ -268,6 +268,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             }
         }else{
             Log.d("OPENCV", "No sd");
+
         }
     }
 }

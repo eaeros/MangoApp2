@@ -1,7 +1,7 @@
 package com.example.ginioginio.mangoapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +9,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -23,24 +22,22 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
 public class camera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private CameraBridgeViewBase mOpenCvCameraView;
     public Mat img=null,imgt=null;
-    private EditText intCapturas;
-    String capturas_t;
+    double avg1 = 0;
+    double avg2 = 0;
     String path;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +49,6 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        intCapturas = (EditText) findViewById(R.id.editText2);
 
     }
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
@@ -129,7 +125,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         Vector<Mat> spl = new Vector<>(3);
         Core.split(img,spl);//ARGB
 
-        img = spl.get(1);
+        img = spl.get(2);
 
         Imgproc.rectangle(img, new Point(10, 40), new Point((img.width()/2)-10, img.height()-40),new Scalar(0, 255, 0));
         Imgproc.rectangle(img, new Point((img.width()/2)+10, 40), new Point((img.width())-10, img.height()-40),new Scalar(0, 255, 0));
@@ -140,7 +136,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         int size = (int) img1.total() * img1.channels();
         double[] buff;
 
-        double avg1 = 0;
+        avg1 = 0;
         for(int i = 0; i < img1.height(); i++)
         {
             for(int j = 0; j < img1.width(); j++){
@@ -154,7 +150,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         Rect rect2 = new Rect((img.width()/2)+10, 40, (img.width()/2)-10, img.height()-40);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
 
-        double avg2 = 0;
+        avg2 = 0;
         for(int i = 0; i < img2.height(); i++)
         {
             for(int j = 0; j < img2.width(); j++){
@@ -172,57 +168,55 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     }
 
     public void iniciar(View view){
-        Thread serverThread = null;
-        if(!intCapturas.getText().toString().equals("") && !intCapturas.getText().toString().equals("0")){
-            capturas_t = intCapturas.getText().toString();
-            intCapturas.setText("");
-            serverThread = new Thread(new ServerThread());
-            serverThread.start();
-        }else{
-            Log.d("OPENCV", "Error numero capturas");
-        }
-
-    }
-
-    class ServerThread implements Runnable {
-
-        public void run() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            path = sdf.format(new Date());
-            int capturas = 0;
-            String nombre;
-            while (!Thread.currentThread().isInterrupted()) {
-                capturas++;
-                nombre = "Captura"+capturas+".png";
-                Log.d("OPENCV", "Guardando "+nombre);
-                guardar(nombre);
-                try {
-                    Thread.sleep(1000/Integer.parseInt(capturas_t));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (capturas == Integer.parseInt(capturas_t)){
-                    break;
-                }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        path = sdf.format(new Date());
+        String txt = path + "|"+ String.format(Locale.US,"%.2f",avg1) + "|"+ String.format(Locale.US,"%.2f",avg2) + "\n";
+        String nombre;
+        nombre = path+".png";
+        Log.d("OPENCV", "Guardando "+nombre);
+        int result = guardarImagen(nombre);
+        if(result == 1){
+            if(guardarTxt(txt) == 1){
+                Log.d("OPENCV", "Se guardo image.... txt.... "+nombre);
+            }else{
+                Log.d("OPENCV", "Se guardo image.... error txt "+nombre);
             }
+        }else{
+            Log.d("OPENCV", "Error image "+nombre);
         }
     }
 
-    public void guardar(String filename){
+    public int guardarTxt(String data) {
+        try {
+            File myFile = new File("sdcard/mangoApp/data.txt");
+            myFile.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(myFile);
+            OutputStreamWriter myOutWriter =
+                    new OutputStreamWriter(fOut);
+            myOutWriter.append(data);
+            myOutWriter.close();
+            fOut.close();
+            return 1;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public int guardarImagen(String filename){
         Bitmap bmp = null;
         try {
             bmp = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(img, bmp);
         } catch (CvException e) {
             Log.d("OPENCV", e.getMessage());
+            return  2;//error
         }
 
 
         FileOutputStream out = null;
 
         //File sd = new File(Environment.getExternalStorageDirectory() + "/"+path);
-        File sd = new File("sdcard/mangoApp/"+path);
+        File sd = new File("sdcard/mangoApp");
         boolean success = true;
         if (!sd.exists()) {
             success = sd.mkdir();
@@ -238,20 +232,24 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("OPENCV", e.getMessage());
+                return 2;//error
             } finally {
                 try {
                     if (out != null) {
                         out.close();
                         Log.d("OPENCV", "OK!!");
+                        return 1;//Guardado
                     }
                 } catch (IOException e) {
                     Log.d("OPENCV", e.getMessage() + "Error");
                     e.printStackTrace();
+                    return 2; //error
                 }
             }
         }else{
             Log.d("OPENCV", "No sd");
-
+            return 0;//No sd
         }
+        return 2;
     }
 }

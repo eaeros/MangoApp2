@@ -35,10 +35,13 @@ import java.util.Vector;
 
 public class camera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private CameraBridgeViewBase mOpenCvCameraView;
+    private EditText intCapturas;
     public Mat img=null,imgt=null;
     double avg1 = 0;
     double avg2 = 0;
     String path;
+    String capturas_t;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +52,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-
+        intCapturas = (EditText) findViewById(R.id.editText2);
     }
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 
@@ -136,30 +139,30 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         int size = (int) img1.total() * img1.channels();
         double[] buff;
 
-        avg1 = 0;
+        double sum1 = 0;
         for(int i = 0; i < img1.height(); i++)
         {
             for(int j = 0; j < img1.width(); j++){
                 buff = img1.get(i,j);
-                avg1  += buff[0];
+                sum1  += buff[0];
             }
 
         }
-        avg1 = avg1/size;
+        avg1 = sum1/size;
 
         Rect rect2 = new Rect((img.width()/2)+10, 40, (img.width()/2)-10, img.height()-40);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
 
-        avg2 = 0;
+        double sum2 = 0;
         for(int i = 0; i < img2.height(); i++)
         {
             for(int j = 0; j < img2.width(); j++){
                 buff = img2.get(i,j);
-                avg2  += buff[0];
+                sum2  += buff[0];
             }
 
         }
-        avg2 = avg2/size;
+        avg2 = sum2/size;
 
         Imgproc.putText(img, String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
         Imgproc.putText(img, String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
@@ -168,25 +171,18 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     }
 
     public void iniciar(View view){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        path = sdf.format(new Date());
-        String txt = path + "|"+ String.format(Locale.US,"%.2f",avg1) + "|"+ String.format(Locale.US,"%.2f",avg2) + "\n";
-        String nombre;
-        nombre = path+".png";
-        Log.d("OPENCV", "Guardando "+nombre);
-        int result = guardarImagen(nombre);
-        if(result == 1){
-            if(guardarTxt(txt) == 1){
-                Log.d("OPENCV", "Se guardo image.... txt.... "+nombre);
-            }else{
-                Log.d("OPENCV", "Se guardo image.... error txt "+nombre);
-            }
+        Thread serverThread = null;
+        if(!intCapturas.getText().toString().equals("") && !intCapturas.getText().toString().equals("0")){
+            capturas_t = intCapturas.getText().toString();
+            intCapturas.setText("");
+            serverThread = new Thread(new ServerThread());
+            serverThread.start();
         }else{
-            Log.d("OPENCV", "Error image "+nombre);
+            Log.d("OPENCV", "Error numero capturas");
         }
     }
 
-    public int guardarTxt(String data) {
+    public void guardarTxt(String data) {
         try {
             File myFile = new File("sdcard/mangoApp/data.txt");
             myFile.createNewFile();
@@ -196,20 +192,47 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             myOutWriter.append(data);
             myOutWriter.close();
             fOut.close();
-            return 1;
         } catch (Exception e) {
-            return 0;
+            Log.d("OPENCV", "Error txt");
         }
     }
 
-    public int guardarImagen(String filename){
+    class ServerThread implements Runnable {
+
+        public void run() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            path = sdf.format(new Date());
+            int capturas = 0;
+            String nombre;
+            String txt;
+            while (!Thread.currentThread().isInterrupted()) {
+                capturas++;
+                nombre = "Captura"+capturas+".png";
+                Log.d("OPENCV", "Guardando "+nombre);
+                guardarImagen(nombre);
+                txt = path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "\n";
+                guardarTxt(txt);
+                try {
+                    Thread.sleep(1000/Integer.parseInt(capturas_t));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (capturas == Integer.parseInt(capturas_t)){
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public void guardarImagen(String filename){
         Bitmap bmp = null;
         try {
             bmp = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(img, bmp);
         } catch (CvException e) {
             Log.d("OPENCV", e.getMessage());
-            return  2;//error
         }
 
 
@@ -232,24 +255,19 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("OPENCV", e.getMessage());
-                return 2;//error
             } finally {
                 try {
                     if (out != null) {
                         out.close();
                         Log.d("OPENCV", "OK!!");
-                        return 1;//Guardado
                     }
                 } catch (IOException e) {
                     Log.d("OPENCV", e.getMessage() + "Error");
                     e.printStackTrace();
-                    return 2; //error
                 }
             }
         }else{
             Log.d("OPENCV", "No sd");
-            return 0;//No sd
         }
-        return 2;
     }
 }

@@ -184,7 +184,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
     public void guardarTxt(String data) {
         try {
-            File myFile = new File("sdcard/mangoApp/data.txt");
+            File myFile = new File("sdcard/mangoApp/"+path+"/data.txt");
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter =
@@ -204,14 +204,13 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             path = sdf.format(new Date());
             int capturas = 0;
             String nombre;
-            String txt;
+            String txt="";
             while (!Thread.currentThread().isInterrupted()) {
                 capturas++;
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "\n";
-                guardarTxt(txt);
+                txt = txt + path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "\n";
                 try {
                     Thread.sleep(1000/Integer.parseInt(capturas_t));
                 } catch (InterruptedException e) {
@@ -219,6 +218,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 }
 
                 if (capturas == Integer.parseInt(capturas_t)){
+                    guardarTxt(txt);
                     break;
                 }
             }

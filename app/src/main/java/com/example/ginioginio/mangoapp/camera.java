@@ -41,6 +41,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     double avg2 = 0;
     String path;
     String capturas_t;
+    double av1 = 0;
+    double av2 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +213,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
                 txt = txt + path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "\n";
+                av1 += avg1;
+                av2 += avg2;
                 try {
                     Thread.sleep(1000/Integer.parseInt(capturas_t));
                 } catch (InterruptedException e) {
@@ -218,6 +222,9 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 }
 
                 if (capturas == Integer.parseInt(capturas_t)){
+                    av1 = av1/capturas;
+                    av2 = av2/capturas;
+                    txt = txt + path + "|"+String.format(Locale.US,"%.2f",av1) + "|"+String.format(Locale.US,"%.2f",av2) + "\n";
                     guardarTxt(txt);
                     break;
                 }

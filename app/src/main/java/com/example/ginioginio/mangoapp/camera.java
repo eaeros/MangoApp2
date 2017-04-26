@@ -207,6 +207,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             int capturas = 0;
             String nombre;
             String txt="";
+            av1 = 0;
+            av2 = 0;
             while (!Thread.currentThread().isInterrupted()) {
                 capturas++;
                 nombre = "Captura"+capturas+".png";

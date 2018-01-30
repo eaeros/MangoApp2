@@ -1,7 +1,9 @@
 package com.example.ginioginio.mangoapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,10 +41,12 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     public Mat img=null,imgt=null;
     double avg1 = 0;
     double avg2 = 0;
+    double avg3 = 0;
     String path;
     String capturas_t;
     double av1 = 0;
     double av2 = 0;
+    double av3 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,10 +136,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         img = spl.get(2);
 
-        Imgproc.rectangle(img, new Point(10, 40), new Point((img.width()/2)-10, img.height()-40),new Scalar(0, 255, 0));
-        Imgproc.rectangle(img, new Point((img.width()/2)+10, 40), new Point((img.width())-10, img.height()-40),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point(48, 60), new Point((img.width()/2)-17, img.height()-60),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point((img.width()/2)+15, 60), new Point((img.width())-50, img.height()-60),new Scalar(0, 255, 0));
 
-        Rect rect1 = new Rect(10, 40, (img.width()/2)-10, img.height()-40);
+        Rect rect1 = new Rect(25, 60, (img.width()/2)-25, img.height()-60);
         Mat img1 = img.submat(rect1); //= new Mat(img, rect1);
 
         int size = (int) img1.total() * img1.channels();
@@ -152,7 +156,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         }
         avg1 = sum1/size;
 
-        Rect rect2 = new Rect((img.width()/2)+10, 40, (img.width()/2)-10, img.height()-40);
+        Rect rect2 = new Rect((img.width()/2)+25, 60, (img.width()/2)-25, img.height()-60);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
 
         double sum2 = 0;
@@ -166,8 +170,11 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         }
         avg2 = sum2/size;
 
-        Imgproc.putText(img, String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
-        Imgproc.putText(img, String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        avg3 = avg1/avg2;
+
+        Imgproc.putText(img,"E: " + String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        Imgproc.putText(img,"R: " + String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
 
         return img;
     }
@@ -179,6 +186,20 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             intCapturas.setText("");
             serverThread = new Thread(new ServerThread());
             serverThread.start();
+
+            AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+            alerta.setMessage("Capturas almacenadas en /sdcard/mangoApp/ ")
+                    .setPositiveButton("Continuar..", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            dialog.dismiss();
+                        }
+                    })
+                    .setTitle("Mensaje")
+                    .setIcon(R.drawable.ic_menu_camera)
+                    .create();
+            alerta.show();
+
         }else{
             Log.d("OPENCV", "Error numero capturas");
         }
@@ -186,7 +207,14 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
     public void guardarTxt(String data) {
         try {
-            File myFile = new File("sdcard/mangoApp/"+path+"/data.txt");
+
+            File directorio = new File("sdcard/mangoApp");
+
+            if(!directorio.exists()){
+                directorio.mkdir();
+            }
+
+            File myFile = new File("sdcard/mangoApp/"+path+"/mango.txt");
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter =
@@ -209,14 +237,16 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             String txt="";
             av1 = 0;
             av2 = 0;
+            av3 = 0;
             while (!Thread.currentThread().isInterrupted()) {
                 capturas++;
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = txt + path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "\n";
+                txt = txt + path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "|"+String.format(Locale.US,"%.2f",avg3) + "\n";
                 av1 += avg1;
                 av2 += avg2;
+                av3 += avg3;
                 try {
                     Thread.sleep(1000/Integer.parseInt(capturas_t));
                 } catch (InterruptedException e) {
@@ -226,8 +256,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 if (capturas == Integer.parseInt(capturas_t)){
                     av1 = av1/capturas;
                     av2 = av2/capturas;
-                    txt = txt + path + "|"+String.format(Locale.US,"%.2f",av1) + "|"+String.format(Locale.US,"%.2f",av2) + "\n";
+                    av3 = av3/capturas;
+                    txt = txt + path + "|"+String.format(Locale.US,"%.2f",av1) + "|"+String.format(Locale.US,"%.2f",av2) + "|"+String.format(Locale.US,"%.2f",av3)  +"\n";
                     guardarTxt(txt);
+
                     break;
                 }
             }

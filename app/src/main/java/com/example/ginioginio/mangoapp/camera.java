@@ -136,10 +136,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         img = spl.get(2);
 
-        Imgproc.rectangle(img, new Point(48, 60), new Point((img.width()/2)-17, img.height()-60),new Scalar(0, 255, 0));
-        Imgproc.rectangle(img, new Point((img.width()/2)+15, 60), new Point((img.width())-50, img.height()-60),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point(50, 60), new Point((img.width()/2)-18, img.height()-66),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point((img.width()/2)+18, 60), new Point((img.width())-50, img.height()-66),new Scalar(0, 255, 0));
 
-        Rect rect1 = new Rect(25, 60, (img.width()/2)-25, img.height()-60);
+        Rect rect1 = new Rect(50, 60, 20, 20);
         Mat img1 = img.submat(rect1); //= new Mat(img, rect1);
 
         int size = (int) img1.total() * img1.channels();
@@ -156,25 +156,29 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         }
         avg1 = sum1/size;
 
-        Rect rect2 = new Rect((img.width()/2)+25, 60, (img.width()/2)-25, img.height()-60);
+        Rect rect2 = new Rect(((img.width()/2)+18), 60, 20, 20);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
 
+        int size2 = (int) img2.total() * img2.channels();
+        double[] buff2;
         double sum2 = 0;
         for(int i = 0; i < img2.height(); i++)
         {
             for(int j = 0; j < img2.width(); j++){
-                buff = img2.get(i,j);
-                sum2  += buff[0];
+                buff2 = img2.get(i,j);
+                sum2  += buff2[0];
             }
 
         }
-        avg2 = sum2/size;
+        avg2 = sum2/size2;
 
         avg3 = avg1/avg2;
+        //float alto = img.height();
 
         Imgproc.putText(img,"E: " + String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
         Imgproc.putText(img,"R: " + String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
-        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        //Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        //Imgproc.putText(img,"H: " + String.format(Locale.US,"%.2f",alto), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
 
         return img;
     }

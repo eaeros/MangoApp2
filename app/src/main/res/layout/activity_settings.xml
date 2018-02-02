@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ginioginio.mangoapp.Settings">
+
+    <TextView
+        android:id="@+id/textViewNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:textSize="16dp"
+        android:text="Area análisis"
+        android:textColor="@color/letras"/>
+
+    <EditText
+        android:id="@+id/editTextNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textViewNum"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/textViewNum"
+        android:ems="8"
+        android:inputType="number"
+        android:hint="introduzca tamaño" />
+
+    <Button
+        android:id="@+id/btnNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="ok"
+        android:layout_alignBottom="@+id/editTextNum"
+        android:layout_toEndOf="@+id/editTextNum" />
+</RelativeLayout>

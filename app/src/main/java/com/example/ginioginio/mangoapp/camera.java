@@ -11,6 +11,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -47,6 +48,12 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     double av1 = 0;
     double av2 = 0;
     double av3 = 0;
+    public int caja=20;
+    public int anchomedio;
+    int puntoA=55;
+    int puntoB=60;
+    int puntoC=101;
+    int puntoD=60;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,20 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         mOpenCvCameraView.setCvCameraViewListener(this);
 
         intCapturas = (EditText) findViewById(R.id.editText2);
+
+        Bundle bundle =getIntent().getExtras();
+        if (bundle != null){
+            //int greeter = bundle.getInt("finalNumid");
+            String greeter2 = bundle.getString("finalNumid");
+            Toast.makeText(camera.this,"valor recibido"+(greeter2), Toast.LENGTH_SHORT).show();
+            //txt.setText(greeter);
+            //pix2 = greeter;
+            //Toast.makeText(camera.this,"pix2 vale"+String.valueOf(pix2), Toast.LENGTH_SHORT).show();
+            caja = Integer.parseInt(greeter2);
+            Toast.makeText(camera.this,"caja ahora vale"+String.valueOf(caja), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(camera.this,"Esta vacio", Toast.LENGTH_LONG).show();
+        }
     }
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 
@@ -135,11 +156,12 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         Core.split(img,spl);//ARGB
 
         img = spl.get(2);
+        anchomedio = (img.width()/2);
 
-        Imgproc.rectangle(img, new Point(50, 60), new Point((img.width()/2)-18, img.height()-66),new Scalar(0, 255, 0));
-        Imgproc.rectangle(img, new Point((img.width()/2)+18, 60), new Point((img.width())-50, img.height()-66),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point(puntoA, puntoB), new Point(puntoA+caja, puntoB+caja),new Scalar(0, 255, 0));
+        Imgproc.rectangle(img, new Point(puntoC, puntoD), new Point(puntoC+caja, puntoD+caja),new Scalar(0, 255, 0));
 
-        Rect rect1 = new Rect(50, 60, 20, 20);
+        Rect rect1 = new Rect(puntoA, puntoB, caja, caja);
         Mat img1 = img.submat(rect1); //= new Mat(img, rect1);
 
         int size = (int) img1.total() * img1.channels();
@@ -156,7 +178,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         }
         avg1 = sum1/size;
 
-        Rect rect2 = new Rect(((img.width()/2)+18), 60, 20, 20);
+        Rect rect2 = new Rect(puntoC, puntoD, caja, caja);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
 
         int size2 = (int) img2.total() * img2.channels();
@@ -177,7 +199,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         Imgproc.putText(img,"E: " + String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
         Imgproc.putText(img,"R: " + String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
-        //Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
         //Imgproc.putText(img,"H: " + String.format(Locale.US,"%.2f",alto), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
 
         return img;
@@ -199,7 +221,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                             dialog.dismiss();
                         }
                     })
-                    .setTitle("Mensaje")
+                    .setTitle("Análisis terminado")
                     .setIcon(R.drawable.ic_menu_camera)
                     .create();
             alerta.show();

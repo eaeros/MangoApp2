@@ -48,12 +48,12 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     double av1 = 0;
     double av2 = 0;
     double av3 = 0;
-    public int caja=20;
+    public int caja;
     public int anchomedio;
-    int puntoA=55;
-    int puntoB=60;
-    int puntoC=101;
-    int puntoD=60;
+    int puntoA;
+    int puntoB;
+    int puntoC;
+    int puntoD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         intCapturas = (EditText) findViewById(R.id.editText2);
         Globals g = Globals.getInstance();
         caja =g.getData();
-
+        puntoA =g.getLh();
+        puntoB = g. getLv();
+        puntoC = g.getLh()+caja+g.getSeparacion();
+        puntoD = g.getLv();
 
         /*
         Bundle bundle =getIntent().getExtras();
@@ -201,9 +204,9 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         avg3 = avg1/avg2;
         //float alto = img.height();
 
-        Imgproc.putText(img,"E: " + String.format(Locale.US,"%.2f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
-        Imgproc.putText(img,"R: " + String.format(Locale.US,"%.2f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 2);
-        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
+        Imgproc.putText(img,"E: " + String.format(Locale.US,"%.0f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 1);
+        Imgproc.putText(img,"R: " + String.format(Locale.US,"%.0f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 1);
+        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 1);
         //Imgproc.putText(img,"H: " + String.format(Locale.US,"%.2f",alto), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
 
         return img;

@@ -7,16 +7,49 @@
     tools:context="com.example.ginioginio.mangoapp.Settings">
 
     <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:text="Limite vertical"
+        android:textColor="@color/letras"
+        android:textSize="16dp"
+        android:layout_below="@+id/editTextHorizontal"
+        android:layout_alignStart="@+id/textViewNum" />
+
+    <TextView
         android:id="@+id/textViewNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:textSize="16dp"
+        android:text="Limite Horizontal"
+        android:textColor="@color/letras"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Separación"
+        android:textColor="@color/letras"
+        android:textSize="16dp"
+        android:layout_below="@+id/textView3"
+        android:layout_alignStart="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
-        android:textSize="16dp"
         android:text="Area análisis"
-        android:textColor="@color/letras"/>
+        android:textColor="@color/letras"
+        android:textSize="16dp" />
 
     <EditText
         android:id="@+id/editTextNum"
@@ -29,14 +62,49 @@
         android:layout_toEndOf="@+id/textViewNum"
         android:ems="8"
         android:inputType="number"
-        android:hint="introduzca tamaño" />
+        android:hint="introduzca 2 - 50" />
+
+    <EditText
+        android:id="@+id/editTextHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="8"
+        android:hint="introduzca  1 - 80"
+        android:inputType="number"
+        android:layout_alignBaseline="@+id/textViewNum"
+        android:layout_alignBottom="@+id/textViewNum"
+        android:layout_alignStart="@+id/editTextNum" />
+
+    <EditText
+        android:id="@+id/editTextVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="8"
+        android:hint="introduzca 1 - 100"
+        android:inputType="number"
+        android:layout_alignBaseline="@+id/textView3"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignStart="@+id/editTextHorizontal" />
+
+    <EditText
+        android:id="@+id/editTextseparacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="8"
+        android:hint="introduzca 1 - 100"
+        android:inputType="number"
+        android:layout_alignBaseline="@+id/textView4"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignStart="@+id/editTextVertical" />
 
     <Button
         android:id="@+id/btnNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:text="ok"
-        android:layout_alignBottom="@+id/editTextNum"
-        android:layout_toEndOf="@+id/editTextNum" />
+        android:textSize="18dp"
+        android:layout_below="@+id/editTextseparacion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp"
+        android:background="@color/colorPrimaryDark"/>
 </RelativeLayout>

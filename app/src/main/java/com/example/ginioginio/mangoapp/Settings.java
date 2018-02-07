@@ -27,11 +27,16 @@ public class Settings extends AppCompatActivity {
                 String pixNumber = varTxtNum.getText().toString();
                 if (pixNumber != null && !pixNumber.isEmpty()) {
                     //pix =Integer.getInteger(pixNumber);
-                    Toast.makeText(Settings.this,"caja de texto vale: "+pixNumber, Toast.LENGTH_SHORT).show();
-                    Intent intend  = new Intent(Settings.this, camera.class);
+                    Toast.makeText(Settings.this,"Tamaño de analisis insertado es "+pixNumber, Toast.LENGTH_SHORT).show();
+                    int global = Integer.parseInt(pixNumber);
+                    Globals g = Globals.getInstance();
+                    g.setData(global);
+                    Intent intend  = new Intent(Settings.this, MenuPrincipal.class);
                     //mandamos in inend con el id greeter y la variable GREETER
-                    intend.putExtra("finalNumid", pixNumber);
+                    //intend.putExtra("finalNumid", pixNumber);
                     startActivity(intend);
+                }else {
+                    Toast.makeText(Settings.this,"inserte un tamaño válido", Toast.LENGTH_SHORT).show();
                 }
             }
         });

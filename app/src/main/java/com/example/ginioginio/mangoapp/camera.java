@@ -66,7 +66,11 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         mOpenCvCameraView.setCvCameraViewListener(this);
 
         intCapturas = (EditText) findViewById(R.id.editText2);
+        Globals g = Globals.getInstance();
+        caja =g.getData();
 
+
+        /*
         Bundle bundle =getIntent().getExtras();
         if (bundle != null){
             //int greeter = bundle.getInt("finalNumid");
@@ -79,7 +83,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             Toast.makeText(camera.this,"caja ahora vale"+String.valueOf(caja), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(camera.this,"Esta vacio", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 

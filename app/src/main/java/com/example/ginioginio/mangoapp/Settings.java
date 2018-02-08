@@ -29,6 +29,8 @@ public class Settings extends AppCompatActivity {
         varTxtH = (EditText)findViewById(R.id.editTextHorizontal);
         varTxtV =(EditText)findViewById(R.id.editTextVertical);
         varTxtS = (EditText)findViewById(R.id.editTextseparacion);
+        //boton de regreso
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         varBtnNum.setOnClickListener(new View.OnClickListener() {
             @Override

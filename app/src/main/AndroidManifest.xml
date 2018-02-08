@@ -35,12 +35,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".camera" />
+        <activity android:name=".camera"
+                  android:label="Toma de Muestras"
+                  android:parentActivityName=".MenuPrincipal"/>
         <activity
             android:name=".folders"
             android:label="@string/title_activity_folders"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Settings"></activity>
+        <activity
+            android:name=".Settings"
+            android:label="Ajustes avanzados"
+            android:parentActivityName=".MenuPrincipal"/>
     </application>
 
 </manifest>

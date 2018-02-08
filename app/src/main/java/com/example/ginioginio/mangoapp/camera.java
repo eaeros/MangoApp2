@@ -2,6 +2,7 @@ package com.example.ginioginio.mangoapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
@@ -70,12 +71,20 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         mOpenCvCameraView.setCvCameraViewListener(this);
 
         intCapturas = (EditText) findViewById(R.id.editText2);
+        /*se quita la lectura de variables globales y se hace uso de shared preference
         Globals g = Globals.getInstance();
         caja =g.getData();
         puntoA =g.getLh();
-        puntoB = g. getLv();
+        puntoB = g.getLv();
         puntoC = g.getLh()+caja+g.getSeparacion();
         puntoD = g.getLv();
+        */
+        SharedPreferences configuracionapp = getSharedPreferences("DatosConfiguracion", Context.MODE_PRIVATE);
+        caja = configuracionapp.getInt("area",25);
+        puntoA = configuracionapp.getInt("horizontal",55);
+        puntoB = configuracionapp.getInt("vertical",60);
+        puntoC = configuracionapp.getInt("separacion",16)+caja+puntoA;
+        puntoD = puntoB;
 
         /*
         Bundle bundle =getIntent().getExtras();

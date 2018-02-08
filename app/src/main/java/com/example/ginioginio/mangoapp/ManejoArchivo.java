@@ -17,6 +17,7 @@ public class ManejoArchivo {
             directorio.mkdir();
         }
 
+
         //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         File imagen = new File(directorio,"app_mango.img");

@@ -1,6 +1,9 @@
 package com.example.ginioginio.mangoapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,12 +42,17 @@ public class Settings extends AppCompatActivity {
                 String h2 = varTxtH.getText().toString();
                 String v2 =varTxtV.getText().toString();
                 String s2 =varTxtS.getText().toString();
+                SharedPreferences configuracionapp = getSharedPreferences("DatosConfiguracion", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = configuracionapp.edit();
 
 
                 if (area != null && !area.isEmpty()) {
                     //pix =Integer.getInteger(pixNumber);
                     int global = Integer.parseInt(area);
+                    varTxtNum.setText("");
                     if(global>=2 && global<=50){
+                        editor.putInt("area",global);
+                        editor.commit();
                         g.setData(global);
                         flag=true;
                     } else {
@@ -56,7 +64,10 @@ public class Settings extends AppCompatActivity {
                 }
                 if (h2 != null && !h2.isEmpty()){
                     int h3 = Integer.parseInt(h2);
+                    varTxtH.setText("");
                     if ((h3>=1 && h3<=100)&&((h3+g.getData()+g.getData()+g.getSeparacion())<=176)){
+                        editor.putInt("horizontal",h3);
+                        editor.commit();
                         g.setLh(h3);
                         flag=true;
                     } else{
@@ -66,7 +77,10 @@ public class Settings extends AppCompatActivity {
                 }
                 if (v2 != null && !v2.isEmpty()){
                     int v3 = Integer.parseInt(v2);
+                    varTxtV.setText("");
                     if((v3>=1 && v3<=100)&&(v3+g.getData()<=144)){
+                        editor.putInt("vertical",v3);
+                        editor.commit();
                         g.setLv(v3);
                         flag=true;
                     } else {
@@ -77,7 +91,10 @@ public class Settings extends AppCompatActivity {
                 }
                 if (s2 != null && !s2.isEmpty()){
                     int s3 = Integer.parseInt(s2);
+                    varTxtS.setText("");
                     if((s3>=1 && s3<=100)&&((g.getLh()+g.getData()+g.getData()+s3)<=176)){
+                        editor.putInt("separacion",s3);
+                        editor.commit();
                         g.setSeparacion(s3);
                         flag=true;
                     } else {

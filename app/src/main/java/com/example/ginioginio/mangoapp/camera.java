@@ -276,7 +276,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     class ServerThread implements Runnable {
 
         public void run() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy|HH:mm:ss");
             path = sdf.format(new Date());
             int capturas = 0;
             String nombre;

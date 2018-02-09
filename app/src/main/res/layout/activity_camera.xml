@@ -29,9 +29,10 @@
                 android:layout_weight="1"
                 android:elevation="0dp"
                 android:onClick="iniciar"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
-                android:text="capturar" />
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="capturar"
+                android:textSize="10dp"/>
 
             <EditText
                 android:id="@+id/editText2"
@@ -39,8 +40,23 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="Número de capturas"
+                android:hint="Capturas"
                 android:inputType="number" />
+            <EditText
+                android:id="@+id/EditTextIntervalos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="2"
+                android:hint="Intervalos"
+                android:inputType="time"/>
+            <EditText
+                android:id="@+id/EditTextPrueba"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="nombre:"
+                android:inputType="text"/>
 
         </LinearLayout>
 

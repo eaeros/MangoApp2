@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,17 +37,23 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
 import java.util.Vector;
 
 public class camera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private CameraBridgeViewBase mOpenCvCameraView;
+    private EditText varEditTxtNombre;
+    private EditText varEditTxtTiempo;
     private EditText intCapturas;
     public Mat img=null,imgt=null;
     double avg1 = 0;
     double avg2 = 0;
     double avg3 = 0;
     String path;
+    String path2;
     String capturas_t;
+    String nombrePrueba="";
+    String Tiempo;
     double av1 = 0;
     double av2 = 0;
     double av3 = 0;
@@ -56,6 +63,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     int puntoB;
     int puntoC;
     int puntoD;
+    private CountDownTimer timer;
+    boolean working =false;
+    int temp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +80,9 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+
+        varEditTxtNombre = (EditText)findViewById(R.id.EditTextNombre);
+        varEditTxtTiempo = (EditText)findViewById(R.id.EditTextTiempo);
 
         intCapturas = (EditText) findViewById(R.id.editText2);
         /*se quita la lectura de variables globales y se hace uso de shared preference
@@ -85,6 +99,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         puntoB = configuracionapp.getInt("vertical",60);
         puntoC = configuracionapp.getInt("separacion",16)+caja+puntoA;
         puntoD = puntoB;
+
+         String Tiempo = varEditTxtTiempo.getText().toString();
 
         /*
         Bundle bundle =getIntent().getExtras();
@@ -227,11 +243,20 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
     public void iniciar(View view){
         Thread serverThread = null;
+        nombrePrueba="";
         if(!intCapturas.getText().toString().equals("") && !intCapturas.getText().toString().equals("0")){
             capturas_t = intCapturas.getText().toString();
             intCapturas.setText("");
+            nombrePrueba = varEditTxtNombre.getText().toString();
+            varEditTxtNombre.setText("");
+            Tiempo = varEditTxtTiempo.getText().toString();
+            varEditTxtTiempo.setText("");
+
             serverThread = new Thread(new ServerThread());
             serverThread.start();
+            int denomidor2 = Integer.parseInt(Tiempo)*1000;
+
+
 
             AlertDialog.Builder alerta = new AlertDialog.Builder(this);
             alerta.setMessage("Capturas almacenadas en /sdcard/mangoApp/ ")
@@ -249,6 +274,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         }else{
             Log.d("OPENCV", "Error numero capturas");
         }
+
     }
 
     public void guardarTxt(String data) {
@@ -260,7 +286,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 directorio.mkdir();
             }
 
-            File myFile = new File("sdcard/mangoApp/"+path+"/mango.txt");
+            File myFile = new File("sdcard/mangoApp/"+path+"/resultados.txt");
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter =
@@ -268,6 +294,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             myOutWriter.append(data);
             myOutWriter.close();
             fOut.close();
+            //Toast.makeText(camera.this,"se creo con exito la carpeta", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Log.d("OPENCV", "Error txt");
         }
@@ -276,25 +303,41 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     class ServerThread implements Runnable {
 
         public void run() {
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy|HH:mm:ss");
-            path = sdf.format(new Date());
+            SimpleDateFormat fecha =new SimpleDateFormat("ddMMyyyy_HH:mm:ss");
+             path = fecha.format(new Date());
+            if ((nombrePrueba != null) && !nombrePrueba.isEmpty()){
+                path =nombrePrueba +"|"+path;
+            }
+
+
+
             int capturas = 0;
             String nombre;
             String txt="";
             av1 = 0;
             av2 = 0;
             av3 = 0;
-            while (!Thread.currentThread().isInterrupted()) {
+            int denomidor = Integer.parseInt(Tiempo)*1000;
+            //while (!Thread.currentThread().isInterrupted()) {
+            while (capturas<=(Integer.parseInt(capturas_t))) {
+
+                SimpleDateFormat hora = new SimpleDateFormat("HH:mm:ss");
+                String path2 = hora.format(new Date());
                 capturas++;
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = txt + path + "|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "|"+String.format(Locale.US,"%.2f",avg3) + "\n";
+                txt = txt + path + "|"+path2+"|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "|"+String.format(Locale.US,"%.2f",avg3) + "\n";
                 av1 += avg1;
                 av2 += avg2;
                 av3 += avg3;
+
+
                 try {
-                    Thread.sleep(1000/Integer.parseInt(capturas_t));
+                    Thread.sleep(denomidor);
+                    //Thread.sleep(3000);
+                    //Thread.sleep(1000*Integer.parseInt(Tiempo));
+                    //Toast.makeText(camera.this,"se hizo la toma numero: "+ String.valueOf(varEditTxtTiempo) , Toast.LENGTH_LONG).show();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -303,7 +346,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                     av1 = av1/capturas;
                     av2 = av2/capturas;
                     av3 = av3/capturas;
-                    txt = txt + path + "|"+String.format(Locale.US,"%.2f",av1) + "|"+String.format(Locale.US,"%.2f",av2) + "|"+String.format(Locale.US,"%.2f",av3)  +"\n";
+                    txt = txt + path + "-"+String.format(Locale.US,"%.2f",av1) + "-"+String.format(Locale.US,"%.2f",av2) + "-"+String.format(Locale.US,"%.2f",av3)  +"\n";
                     guardarTxt(txt);
 
                     break;

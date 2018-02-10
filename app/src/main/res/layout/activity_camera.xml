@@ -24,7 +24,7 @@
 
             <Button
                 android:id="@+id/button3"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:elevation="0dp"
@@ -36,26 +36,27 @@
 
             <EditText
                 android:id="@+id/editText2"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ems="10"
+                android:ems="5"
                 android:hint="Capturas"
                 android:inputType="number" />
             <EditText
-                android:id="@+id/EditTextIntervalos"
-                android:layout_width="match_parent"
+                android:id="@+id/EditTextTiempo"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ems="2"
-                android:hint="Intervalos"
+                android:ems="6"
+                android:hint="Tiempo"
                 android:inputType="time"/>
             <EditText
-                android:id="@+id/EditTextPrueba"
-                android:layout_width="match_parent"
+                android:id="@+id/EditTextNombre"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="nombre:"
+                android:ems="7"
                 android:inputType="text"/>
 
         </LinearLayout>

@@ -49,6 +49,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     double avg1 = 0;
     double avg2 = 0;
     double avg3 = 0;
+    double avg4 = 0;
     String path;
     String path2;
     String capturas_t;
@@ -57,6 +58,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     double av1 = 0;
     double av2 = 0;
     double av3 = 0;
+    double av4=0;
     public int caja;
     public int anchomedio;
     int puntoA;
@@ -231,11 +233,13 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         avg2 = sum2/size2;
 
         avg3 = avg1/avg2;
+        avg4 = avg2/avg1;
         //float alto = img.height();
 
         Imgproc.putText(img,"E: " + String.format(Locale.US,"%.0f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 1);
         Imgproc.putText(img,"R: " + String.format(Locale.US,"%.0f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 1);
         Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 1);
+        //Imgproc.putText(img,"C: " + String.format(Locale.US,"%.0f",capturas_t), new Point((img.width())+10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 1);
         //Imgproc.putText(img,"H: " + String.format(Locale.US,"%.2f",alto), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
 
         return img;
@@ -255,10 +259,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             serverThread = new Thread(new ServerThread());
             serverThread.start();
             int denomidor2 = Integer.parseInt(Tiempo)*1000;
+            Toast.makeText(getApplicationContext(),"Análisis iniciado, por favor espere" , Toast.LENGTH_SHORT).show();
 
 
-
-            AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+            /*AlertDialog.Builder alerta = new AlertDialog.Builder(this);
             alerta.setMessage("Capturas almacenadas en /sdcard/mangoApp/ ")
                     .setPositiveButton("Continuar..", new DialogInterface.OnClickListener(){
                         @Override
@@ -269,7 +273,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                     .setTitle("Análisis terminado")
                     .setIcon(R.drawable.ic_menu_camera)
                     .create();
-            alerta.show();
+            alerta.show();*/
 
         }else{
             Log.d("OPENCV", "Error numero capturas");
@@ -317,6 +321,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             av1 = 0;
             av2 = 0;
             av3 = 0;
+            av4=0;
             int denomidor = Integer.parseInt(Tiempo)*1000;
             //while (!Thread.currentThread().isInterrupted()) {
             while (capturas<=(Integer.parseInt(capturas_t))) {
@@ -327,10 +332,12 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = txt + path + "|"+path2+"|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "|"+String.format(Locale.US,"%.2f",avg3) + "\n";
+                txt = txt + (capturas+1) + path + "|"+path2+"|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "|"+String.format(Locale.US,"%.2f",avg3) + "\n";
                 av1 += avg1;
                 av2 += avg2;
                 av3 += avg3;
+                av4 +=avg4;
+
 
 
                 try {
@@ -346,8 +353,29 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                     av1 = av1/capturas;
                     av2 = av2/capturas;
                     av3 = av3/capturas;
-                    txt = txt + path + "-"+String.format(Locale.US,"%.2f",av1) + "-"+String.format(Locale.US,"%.2f",av2) + "-"+String.format(Locale.US,"%.2f",av3)  +"\n";
+                    av4 =av4/capturas;
+                    txt = txt + (capturas+2) + path + "|promedio E:  "+String.format(Locale.US,"%.2f",av1) + "|promedio R: "+String.format(Locale.US,"%.2f",av2) + "|E/R: "+String.format(Locale.US,"%.2f",av3)+ "|R/E: "+String.format(Locale.US,"%.2f",av4)  +"\n";
                     guardarTxt(txt);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),"analisis terminado" , Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder alerta = new AlertDialog.Builder(camera.this);
+                            alerta.setMessage("Capturas almacenadas en /mangoApp/ ")
+                                    .setPositiveButton("Continuar..", new DialogInterface.OnClickListener(){
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which){
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setTitle("Análisis terminado")
+                                    .setIcon(R.drawable.ic_menu_camera)
+                                    .create();
+                            alerta.show();
+
+                        }
+                    });
+
 
                     break;
                 }

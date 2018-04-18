@@ -17,7 +17,8 @@
         android:name="android.hardware.camera.front.autofocus"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -35,9 +36,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".camera"
-                  android:label="Toma de Muestras"
-                  android:parentActivityName=".MenuPrincipal"/>
+        <activity
+            android:name=".camera"
+            android:label="Toma de Muestras"
+            android:parentActivityName=".MenuPrincipal" />
         <activity
             android:name=".folders"
             android:label="@string/title_activity_folders"
@@ -45,7 +47,10 @@
         <activity
             android:name=".Settings"
             android:label="Ajustes avanzados"
-            android:parentActivityName=".MenuPrincipal"/>
+            android:parentActivityName=".MenuPrincipal" />
+        <activity android:name=".Color_System"
+            android:parentActivityName=".MenuPrincipal"
+            android:label="Selección de Sistema"/>
     </application>
 
 </manifest>

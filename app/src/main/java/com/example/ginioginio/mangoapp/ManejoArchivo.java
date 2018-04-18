@@ -3,9 +3,7 @@ package com.example.ginioginio.mangoapp;
 import java.io.File;
 import 	java.util.Date;
 
-/**
- * Created by Bruno on 04/04/2017.
- */
+
 
 public class ManejoArchivo {
 

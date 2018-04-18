@@ -104,6 +104,8 @@ public class MenuPrincipal extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_share) {
+            Intent intend = new Intent(this, Color_System.class);
+            startActivity(intend);
 
         } else if (id == R.id.nav_send) {
 

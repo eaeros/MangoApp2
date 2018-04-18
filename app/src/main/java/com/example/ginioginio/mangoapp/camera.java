@@ -218,7 +218,6 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         Rect rect2 = new Rect(puntoC, puntoD, caja, caja);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
-
         int size2 = (int) img2.total() * img2.channels();
         double[] buff2;
         double sum2 = 0;
@@ -310,7 +309,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             SimpleDateFormat fecha =new SimpleDateFormat("ddMMyyyy_HH:mm:ss");
              path = fecha.format(new Date());
             if ((nombrePrueba != null) && !nombrePrueba.isEmpty()){
-                path =nombrePrueba +"|"+path;
+                //path =nombrePrueba +"|"+path;
+                path =nombrePrueba +"";
             }
 
 
@@ -332,7 +332,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = txt + (capturas) + path + "|"+path2+"|"+String.format(Locale.US,"%.2f",avg1) + "|"+String.format(Locale.US,"%.2f",avg2) + "|"+String.format(Locale.US,"%.2f",avg3) + "\n";
+                txt = txt + (capturas) + path + "|"+path2+"-"+String.format(Locale.US,"%.2f",avg1) + "-"+String.format(Locale.US,"%.2f",avg2) + "-"+String.format(Locale.US,"%.2f",avg3) + "\n";
                 av1 += avg1;
                 av2 += avg2;
                 av3 += avg3;
@@ -354,7 +354,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                     av2 = av2/capturas;
                     av3 = av3/capturas;
                     av4 =av4/capturas;
-                    txt = txt + (capturas+1) + path + "|promedio E:  "+String.format(Locale.US,"%.2f",av1) + "|promedio R: "+String.format(Locale.US,"%.2f",av2) + "|E/R: "+String.format(Locale.US,"%.2f",av3)+ "|R/E: "+String.format(Locale.US,"%.2f",av4)  +"\n";
+                    txt = txt + (capturas+1) + path + "-promedio E:  "+String.format(Locale.US,"%.2f",av1) + "-promedio R: "+String.format(Locale.US,"%.2f",av2) + "-E/R: "+String.format(Locale.US,"%.2f",av3)+ "-R/E: "+String.format(Locale.US,"%.2f",av4)  +"\n";
                     guardarTxt(txt);
                     runOnUiThread(new Runnable() {
                         @Override

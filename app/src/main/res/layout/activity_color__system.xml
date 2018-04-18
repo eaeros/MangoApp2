@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ginioginio.mangoapp.Color_System"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <EditText
+        android:id="@+id/editText6"
+        android:layout_width="26dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="C"
+        android:layout_marginStart="16dp"
+        tools:layout_editor_absoluteY="251dp"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox7"
+        android:layout_width="32dp"
+        android:layout_height="39dp"
+        android:text=""
+        android:layout_marginEnd="16dp"
+        tools:layout_editor_absoluteY="254dp"
+        tools:layout_editor_absoluteX="363dp" />
+
+    <EditText
+        android:id="@+id/editText13"
+        android:layout_width="44dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="HSL"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="177dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox13"
+        android:layout_width="38dp"
+        android:layout_height="40dp"
+        android:text=""
+        android:layout_marginEnd="16dp"
+        tools:layout_editor_absoluteY="186dp"
+        tools:layout_editor_absoluteX="357dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text=""
+        tools:layout_editor_absoluteX="215dp"
+        tools:layout_editor_absoluteY="105dp" />
+
+    <EditText
+        android:id="@+id/editText10"
+        android:layout_width="44dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="HSV"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="109dp" />
+
+    <EditText
+        android:id="@+id/editText11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="V"
+        tools:layout_editor_absoluteY="109dp"
+        tools:layout_editor_absoluteX="289dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox10"
+        android:layout_width="38dp"
+        android:layout_height="40dp"
+        android:text=""
+        android:layout_marginEnd="16dp"
+        tools:layout_editor_absoluteY="103dp"
+        tools:layout_editor_absoluteX="357dp" />
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="44dp"
+        android:layout_height="43dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="R"
+        android:layout_marginStart="16dp"
+        tools:layout_editor_absoluteY="16dp"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxB"
+        android:layout_width="38dp"
+        android:layout_height="40dp"
+        android:text=""
+        android:layout_marginEnd="16dp"
+        tools:layout_editor_absoluteY="16dp"
+        tools:layout_editor_absoluteX="357dp" />
+</android.support.constraint.ConstraintLayout>

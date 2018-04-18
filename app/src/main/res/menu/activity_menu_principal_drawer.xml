@@ -21,16 +21,24 @@
             android:title="Ajustes" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Sistemas de Color">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Compartir" />
+                android:icon="@drawable/ic_action_brush"
+                android:title="Selección Sistema" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Enviar" />
+                android:icon="@drawable/ic_action_calculator"
+                android:title="Convertidor sistema" />
+        </menu>
+    </item>
+    <item android:title="Documentacion">
+        <menu>
+            <item
+                android:id="@+id/documentacion"
+                android:icon="@drawable/ic_action_document"
+                android:title="Instrucciones" />
         </menu>
     </item>
 

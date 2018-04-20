@@ -94,7 +94,7 @@ public class MenuPrincipal extends AppCompatActivity
             Intent intent = new Intent(this, camera.class);
             startActivity(intent);
         } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, folders.class);
+            Intent intent = new Intent(this, Carpetas.class);
             startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 

@@ -17,8 +17,8 @@
         android:name="android.hardware.camera.front.autofocus"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -43,14 +43,19 @@
         <activity
             android:name=".folders"
             android:label="@string/title_activity_folders"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Settings"
             android:label="Ajustes avanzados"
             android:parentActivityName=".MenuPrincipal" />
-        <activity android:name=".Color_System"
-            android:parentActivityName=".MenuPrincipal"
-            android:label="Selección de Sistema"/>
+        <activity
+            android:name=".Color_System"
+            android:label="Selección de Sistema"
+            android:parentActivityName=".MenuPrincipal" />
+        <activity android:name=".Carpetas"
+            android:label="Archivos"
+            android:parentActivityName=".MenuPrincipal">
+        </activity>
     </application>
 
 </manifest>

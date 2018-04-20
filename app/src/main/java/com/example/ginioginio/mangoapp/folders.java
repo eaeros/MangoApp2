@@ -47,8 +47,7 @@ public class folders extends AppCompatActivity {
      // Third parameter - ID of the TextView to which the data is written
      // Forth - the Array of data
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, fileList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, android.R.id.text1, fileList);
 
     // Assign adapter to ListView
         listView.setAdapter(adapter);
@@ -57,8 +56,7 @@ public class folders extends AppCompatActivity {
          listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
          @Override
-         public void onItemClick(AdapterView<?> parent, View view,
-                                 int position, long id) {
+         public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
     // ListView Clicked item index
             int itemPosition = position;
 

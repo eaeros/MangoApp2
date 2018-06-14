@@ -43,7 +43,7 @@
         <activity
             android:name=".folders"
             android:label="@string/title_activity_folders"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Settings"
             android:label="Ajustes avanzados"
@@ -52,9 +52,15 @@
             android:name=".Color_System"
             android:label="Selección de Sistema"
             android:parentActivityName=".MenuPrincipal" />
-        <activity android:name=".Carpetas"
+        <activity
+            android:name=".Carpetas"
             android:label="Archivos"
             android:parentActivityName=".MenuPrincipal">
+        </activity>
+        <activity android:name=".Carpetas2"
+            android:label="Archivos"
+            android:parentActivityName=".MenuPrincipal">
+
         </activity>
     </application>
 

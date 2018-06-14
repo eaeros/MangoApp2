@@ -12,13 +12,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Carpetas extends AppCompatActivity {
     ListView listView ;
+    private List listaNombresArchivos;
+    private List listaRutasArchivos;
+    private ArrayAdapter adaptador;
+    private String directorioRaiz;
+    private TextView carpetaActual;
 
 
     @Override
@@ -27,6 +34,8 @@ public class Carpetas extends AppCompatActivity {
         setContentView(R.layout.activity_carpetas);
         //boton de regreso
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.listaFiles);
@@ -60,10 +69,10 @@ public class Carpetas extends AppCompatActivity {
 
                 // Show Alert 
                 Toast.makeText(getApplicationContext(),"Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                Uri uri = Uri.parse("sdcard/mangoApp/"); // a directory
-                intent.setDataAndType(uri, "*/*");
-                startActivity(Intent.createChooser(intent, "Open folder"));
+                //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                //Uri uri = Uri.parse("sdcard/mangoApp/"); // a directory
+                //intent.setDataAndType(uri, "*/*");
+                //startActivity(Intent.createChooser(intent, "Open folder"));
 
 
 

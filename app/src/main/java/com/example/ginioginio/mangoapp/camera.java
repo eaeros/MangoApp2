@@ -49,7 +49,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     double avg1 = 0;
     double avg2 = 0;
     double avg3 = 0;
-    double avg4 = 0;
+    double escena =0;
+    double promedioRoi = 0;
     String path;
     String path2;
     String capturas_t;
@@ -68,6 +69,9 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     private CountDownTimer timer;
     boolean working =false;
     int temp;
+    Mat mRed;
+    Mat mGreen;
+    Mat mBlue;
 
 
     @Override
@@ -96,10 +100,10 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         puntoD = g.getLv();
         */
         SharedPreferences configuracionapp = getSharedPreferences("DatosConfiguracion", Context.MODE_PRIVATE);
-        caja = configuracionapp.getInt("area",25);
-        puntoA = configuracionapp.getInt("horizontal",55);
-        puntoB = configuracionapp.getInt("vertical",60);
-        puntoC = configuracionapp.getInt("separacion",16)+caja+puntoA;
+        caja = configuracionapp.getInt("area",70);
+        puntoA = configuracionapp.getInt("horizontal",160);
+        puntoB = configuracionapp.getInt("vertical",200);
+        puntoC = configuracionapp.getInt("separacion",140)+caja+puntoA;
         puntoD = puntoB;
 
          String Tiempo = varEditTxtTiempo.getText().toString();
@@ -130,8 +134,8 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
                     System.loadLibrary("opencv_java3");
 
-                    mOpenCvCameraView.setMaxFrameSize(176,144);
-
+                    //mOpenCvCameraView.setMaxFrameSize(176,144);
+                    mOpenCvCameraView.setMaxFrameSize(640,480);
                     mOpenCvCameraView.enableView();
 
                 } break;
@@ -179,8 +183,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     }
 
     @Override
-    public void onCameraViewStopped() {
-
+    public void onCameraViewStopped() { img.release();
     }
 
     @Override
@@ -192,14 +195,20 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         Vector<Mat> spl = new Vector<>(3);
         Core.split(img,spl);//ARGB
-
-        img = spl.get(2);
+        //img = inputFrame.rgba();
+        //img = spl.get(2);
         anchomedio = (img.width()/2);
-
+        mRed = spl.get(0);
+        mGreen = spl.get(1);
+        mBlue = spl.get(2);
+        //se dibujan region de interes
         Imgproc.rectangle(img, new Point(puntoA, puntoB), new Point(puntoA+caja, puntoB+caja),new Scalar(0, 255, 0));
         Imgproc.rectangle(img, new Point(puntoC, puntoD), new Point(puntoC+caja, puntoD+caja),new Scalar(0, 255, 0));
-
         Rect rect1 = new Rect(puntoA, puntoB, caja, caja);
+        Mat img1R = mRed.submat(rect1);
+        Mat img1G = mGreen.submat(rect1);
+        Mat img1B = mBlue.submat(rect1);
+        /*
         Mat img1 = img.submat(rect1); //= new Mat(img, rect1);
 
         int size = (int) img1.total() * img1.channels();
@@ -212,12 +221,16 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 buff = img1.get(i,j);
                 sum1  += buff[0];
             }
-
         }
-        avg1 = sum1/size;
+        avg1 = sum1/size;*/
 
         Rect rect2 = new Rect(puntoC, puntoD, caja, caja);
+        Mat img2R = mRed.submat(rect2);
+        Mat img2G = mGreen.submat(rect2);
+        Mat img2B = mBlue.submat(rect2);
         Mat img2 = img.submat(rect2); //= new Mat(img, rect1);
+
+        /*
         int size2 = (int) img2.total() * img2.channels();
         double[] buff2;
         double sum2 = 0;
@@ -230,17 +243,20 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
 
         }
         avg2 = sum2/size2;
-
-        avg3 = avg1/avg2;
-        avg4 = avg2/avg1;
+        */
+        //aqui se llama a los metodos de la escena de referencia
+        avg1 = rgbcappromedio(img1R);
+        avg2 = rgbcappromedio(img1G);
+        avg3 = rgbcappromedio(img1B);
+        escena = rgbcappromedio(img2B);
+        promedioRoi = escena/avg3;
         //float alto = img.height();
 
-        Imgproc.putText(img,"E: " + String.format(Locale.US,"%.0f",avg1), new Point(10,10), 1, 1, new Scalar(255, 0, 0, 255), 1);
-        Imgproc.putText(img,"R: " + String.format(Locale.US,"%.0f",avg2), new Point((img.width()/2)+10,10), 1, 1, new Scalar(255, 0, 0, 255), 1);
-        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",avg3), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 1);
+        Imgproc.putText(img,"E: " + String.format(Locale.US,"%.0f",avg3), new Point(30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+        Imgproc.putText(img,"R: " + String.format(Locale.US,"%.0f",escena), new Point((img.width()/2)+30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",promedioRoi), new Point((img.width()/2)-10,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
         //Imgproc.putText(img,"C: " + String.format(Locale.US,"%.0f",capturas_t), new Point((img.width())+10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 1);
         //Imgproc.putText(img,"H: " + String.format(Locale.US,"%.2f",alto), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
-
         return img;
     }
 
@@ -277,7 +293,6 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         }else{
             Log.d("OPENCV", "Error numero capturas");
         }
-
     }
 
     public void guardarTxt(String data) {
@@ -332,11 +347,11 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = txt + (capturas) + path + "|"+path2+"-"+String.format(Locale.US,"%.2f",avg1) + "-"+String.format(Locale.US,"%.2f",avg2) + "-"+String.format(Locale.US,"%.2f",avg3) + "\n";
-                av1 += avg1;
-                av2 += avg2;
-                av3 += avg3;
-                av4 +=avg4;
+                txt = txt + (capturas) + path + "|"+path2+"-"+String.format(Locale.US,"%.2f",avg3) + "-"+String.format(Locale.US,"%.2f",escena) + "-"+String.format(Locale.US,"%.2f",promedioRoi) + "\n";
+                av1 += avg3;
+                av2 += escena;
+                av3 += promedioRoi;
+                //av4 +=avg4;
 
 
 
@@ -428,5 +443,23 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
             Log.d("OPENCV", "No sd");
 
         }
+    }
+
+    public double rgbcappromedio(Mat img1R){
+        int size = (int) img1R.total() * img1R.channels();
+        double[] buff;
+
+        double sum1 = 0;
+        for(int i = 0; i < img1R.height(); i++)
+        {
+            for(int j = 0; j < img1R.width(); j++){
+                buff = img1R.get(i,j);
+                sum1  += buff[0];
+            }
+
+        }
+        double avg1R = sum1/size;
+        return  avg1R;
+
     }
 }

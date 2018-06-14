@@ -50,9 +50,9 @@ public class Settings extends AppCompatActivity {
                     //pix =Integer.getInteger(pixNumber);
                     int global = Integer.parseInt(area);
                     varTxtNum.setText("");
-                    if(global>=2 && global<=50){
+                    if(global>=2 && global<=100){
                         editor.putInt("area",global);
-                        editor.commit();
+                        editor.apply();
                         g.setData(global);
                         flag=true;
                     } else {
@@ -65,9 +65,9 @@ public class Settings extends AppCompatActivity {
                 if (h2 != null && !h2.isEmpty()){
                     int h3 = Integer.parseInt(h2);
                     varTxtH.setText("");
-                    if ((h3>=1 && h3<=100)&&((h3+g.getData()+g.getData()+g.getSeparacion())<=176)){
+                    if ((h3>=1 && h3<=250)&&((h3+g.getData()+g.getData()+g.getSeparacion())<=640)){
                         editor.putInt("horizontal",h3);
-                        editor.commit();
+                        editor.apply();
                         g.setLh(h3);
                         flag=true;
                     } else{
@@ -78,9 +78,9 @@ public class Settings extends AppCompatActivity {
                 if (v2 != null && !v2.isEmpty()){
                     int v3 = Integer.parseInt(v2);
                     varTxtV.setText("");
-                    if((v3>=1 && v3<=100)&&(v3+g.getData()<=144)){
+                    if((v3>=1 && v3<=250)&&(v3+g.getData()<=480)){
                         editor.putInt("vertical",v3);
-                        editor.commit();
+                        editor.apply();
                         g.setLv(v3);
                         flag=true;
                     } else {
@@ -92,9 +92,9 @@ public class Settings extends AppCompatActivity {
                 if (s2 != null && !s2.isEmpty()){
                     int s3 = Integer.parseInt(s2);
                     varTxtS.setText("");
-                    if((s3>=1 && s3<=100)&&((g.getLh()+g.getData()+g.getData()+s3)<=176)){
+                    if((s3>=1 && s3<=250)&&((g.getLh()+g.getData()+g.getData()+s3)<=640)){
                         editor.putInt("separacion",s3);
-                        editor.commit();
+                        editor.apply();
                         g.setSeparacion(s3);
                         flag=true;
                     } else {

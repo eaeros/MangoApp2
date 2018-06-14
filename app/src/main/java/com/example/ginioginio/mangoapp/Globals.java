@@ -14,10 +14,10 @@ public class Globals {
     private static Globals instance;
 
     // Global variable
-    private int tamano=25;
-    private int lh=55;
-    private int lv=60;
-    private int separacion=16;
+    private int tamano=250;
+    private int lh=150;
+    private int lv=150;
+    private int separacion=40;
 
 
 

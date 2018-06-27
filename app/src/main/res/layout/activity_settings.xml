@@ -62,14 +62,14 @@
         android:layout_toEndOf="@+id/textViewNum"
         android:ems="8"
         android:inputType="number"
-        android:hint="introduzca 2 - 50" />
+        android:hint="introduzca valor" />
 
     <EditText
         android:id="@+id/editTextHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="8"
-        android:hint="introduzca  1 - 80"
+        android:hint="introduzca  distancia H"
         android:inputType="number"
         android:layout_alignBaseline="@+id/textViewNum"
         android:layout_alignBottom="@+id/textViewNum"
@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="8"
-        android:hint="introduzca 1 - 100"
+        android:hint="introduzca distancia V"
         android:inputType="number"
         android:layout_alignBaseline="@+id/textView3"
         android:layout_alignBottom="@+id/textView3"
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="8"
-        android:hint="introduzca 1 - 100"
+        android:hint="distancia entre areas"
         android:inputType="number"
         android:layout_alignBaseline="@+id/textView4"
         android:layout_alignBottom="@+id/textView4"
@@ -103,8 +103,39 @@
         android:layout_height="wrap_content"
         android:text="ok"
         android:textSize="18dp"
+        android:background="@color/colorPrimaryDark"
         android:layout_below="@+id/editTextseparacion"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="58dp"
-        android:background="@color/colorPrimaryDark"/>
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_marginTop="29dp" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/btnNum"
+        android:layout_alignStart="@+id/textView4">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="RGB" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="CMYK" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="HSV" />
+    </RadioGroup>
+
 </RelativeLayout>

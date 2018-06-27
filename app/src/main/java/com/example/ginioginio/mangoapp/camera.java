@@ -37,7 +37,6 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Timer;
 import java.util.Vector;
 
 public class camera extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
@@ -45,11 +44,14 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     private EditText varEditTxtNombre;
     private EditText varEditTxtTiempo;
     private EditText intCapturas;
+
     public Mat img=null,imgt=null;
     double avg1 = 0;
     double avg2 = 0;
     double avg3 = 0;
-    double escena =0;
+    double referencia1 =0;
+    double referencia2 =0;
+    double referencia3 =0;
     double promedioRoi = 0;
     String path;
     String path2;
@@ -68,6 +70,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
     int puntoD;
     private CountDownTimer timer;
     boolean working =false;
+    boolean rBtnRGB, rBtnCMYK, rBtnHSV;
     int temp;
     Mat mRed;
     Mat mGreen;
@@ -90,6 +93,7 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         varEditTxtNombre = (EditText)findViewById(R.id.EditTextNombre);
         varEditTxtTiempo = (EditText)findViewById(R.id.EditTextTiempo);
 
+
         intCapturas = (EditText) findViewById(R.id.editText2);
         /*se quita la lectura de variables globales y se hace uso de shared preference
         Globals g = Globals.getInstance();
@@ -105,6 +109,9 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         puntoB = configuracionapp.getInt("vertical",200);
         puntoC = configuracionapp.getInt("separacion",140)+caja+puntoA;
         puntoD = puntoB;
+        rBtnRGB = configuracionapp.getBoolean("RGB", true);
+        rBtnCMYK = configuracionapp.getBoolean("CMYK", false);
+        rBtnHSV = configuracionapp.getBoolean("HSV", false);
 
          String Tiempo = varEditTxtTiempo.getText().toString();
 
@@ -248,16 +255,47 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         avg1 = rgbcappromedio(img1R);
         avg2 = rgbcappromedio(img1G);
         avg3 = rgbcappromedio(img1B);
-        escena = rgbcappromedio(img2B);
-        promedioRoi = escena/avg3;
+        referencia1 = rgbcappromedio(img2R);
+        referencia2 = rgbcappromedio(img2G);
+        referencia3 = rgbcappromedio(img2B);
+        promedioRoi = referencia3 /avg3;
         //float alto = img.height();
 
-        Imgproc.putText(img,"E: " + String.format(Locale.US,"%.0f",avg3), new Point(30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
-        Imgproc.putText(img,"R: " + String.format(Locale.US,"%.0f",escena), new Point((img.width()/2)+30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
-        Imgproc.putText(img,"P: " + String.format(Locale.US,"%.2f",promedioRoi), new Point((img.width()/2)-10,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
+        if (rBtnRGB)
+        {
+            Imgproc.putText(img,"E: " + String.format(Locale.US,"%.0f",avg3), new Point(30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"R: " + String.format(Locale.US,"%.0f", referencia3), new Point((img.width()/2)+30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"R/E: " + String.format(Locale.US,"%.2f",promedioRoi), new Point((img.width()/2)-10,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"RGB ", new Point(30,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
+        }
+
+        if(rBtnHSV)
+        {
+            Double[] hsvE = rgb2hsv(avg1, avg2, avg3);
+            Double[] hsvR = rgb2hsv(referencia1, referencia2, referencia3);
+            Imgproc.putText(img,"Ve:" + String.format(Locale.US,"%.4f",hsvE[2]), new Point(30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"Vr:" + String.format(Locale.US,"%.4f", hsvR[2]), new Point((img.width()/2)+30,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"Vr-Ve:" + String.format(Locale.US,"%.4f",hsvR[2]-hsvE[2]), new Point((img.width()/2)-10,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"HSV ", new Point(30,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
+
+        }
+        if(rBtnCMYK)
+        {
+            Double []cmykE = rgb2Cmyk(avg1 ,avg2, avg3);
+            Double []cmykR = rgb2Cmyk(referencia1, referencia2, referencia3);
+            Imgproc.putText(img,"Ce:" + String.format(Locale.US,"%.2f",cmykE[0])+" Me:" + String.format(Locale.US,"%.2f",cmykE[1])+" Ye:" + String.format(Locale.US,"%.2f",cmykE[2])+" Ke:" + String.format(Locale.US,"%.2f",cmykE[3]), new Point(5,50), 1, 3, new Scalar(255, 0, 0, 255), 5);
+            Imgproc.putText(img,"Ce:" + String.format(Locale.US,"%.2f",cmykR[0])+" Me:" + String.format(Locale.US,"%.2f",cmykR[1])+" Ye:" + String.format(Locale.US,"%.2f",cmykR[2])+" Ke:" + String.format(Locale.US,"%.2f",cmykR[3]), new Point(5,100), 1, 3, new Scalar(255, 0, 0, 255), 5);
+
+            Imgproc.putText(img,"CMYK", new Point(30,img.height()), 1, 3, new Scalar(255, 0, 0, 255), 5);
+
+        }
+
+
         //Imgproc.putText(img,"C: " + String.format(Locale.US,"%.0f",capturas_t), new Point((img.width())+10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 1);
         //Imgproc.putText(img,"H: " + String.format(Locale.US,"%.2f",alto), new Point((img.width()/2)-10,img.height()), 1, 1, new Scalar(255, 0, 0, 255), 2);
         return img;
+
+
     }
 
     public void iniciar(View view){
@@ -347,9 +385,9 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
                 nombre = "Captura"+capturas+".png";
                 Log.d("OPENCV", "Guardando "+nombre);
                 guardarImagen(nombre);
-                txt = txt + (capturas) + path + "|"+path2+"-"+String.format(Locale.US,"%.2f",avg3) + "-"+String.format(Locale.US,"%.2f",escena) + "-"+String.format(Locale.US,"%.2f",promedioRoi) + "\n";
+                txt = txt + (capturas) + path + "|"+path2+"-"+String.format(Locale.US,"%.2f",avg3) + "-"+String.format(Locale.US,"%.2f", referencia3) + "-"+String.format(Locale.US,"%.2f",promedioRoi) + "\n";
                 av1 += avg3;
-                av2 += escena;
+                av2 += referencia3;
                 av3 += promedioRoi;
                 //av4 +=avg4;
 
@@ -461,5 +499,63 @@ public class camera extends AppCompatActivity implements CameraBridgeViewBase.Cv
         double avg1R = sum1/size;
         return  avg1R;
 
+    }
+    public static Double[] rgb2hsv (double r,double g,double b) {
+        double computedH = 0;
+        double computedS = 0;
+        double computedV = 0;
+        double d,h;
+
+        r=r/255; g=g/255; b=b/255;
+        double minRGB = Math.min(r,Math.min(g,b));
+        double maxRGB = Math.max(r,Math.max(g,b));
+
+        // Black-gray-white
+        if (minRGB==maxRGB) {
+            computedV = minRGB;
+            return new  Double[] {computedH,computedS ,computedV};
+        }
+
+        // Colors other than black-gray-white:
+        //double d = (r==minRGB) ? g-b : ((b==minRGB) ? r-g : b-r);
+        //double h = (r==minRGB) ? 3 : ((b==minRGB) ? 1 : 5);
+
+        if (r == minRGB) {
+            d = g - b;
+        } else if (b == minRGB) {
+            d = r - g;
+        } else {
+            d = b - r;
+        }
+        if (r==minRGB){
+            h = 3;
+        } else if (b==minRGB){
+            h = 1;
+        } else {
+            h = 5;
+        }
+        computedH = 60*(h - d/(maxRGB - minRGB));
+        computedS = (maxRGB - minRGB)/maxRGB;
+        computedV = maxRGB;
+        return new Double[]{computedH,computedS,computedV};
+    }
+
+    public static Double[] rgb2Cmyk(double red, double green, double blue)
+    {
+        double black1 = Math.min(Math.min(255 - red, 255 - green), 255 - blue);
+        double black = 1 - Math.max(Math.max(red/255,green/255),blue/255);
+
+        if (black!=255) {
+            double cyan    = (255-red-black1)/(255-black1);
+            double magenta = (255-green-black1)/(255-black1);
+            double yellow  = (255-blue-black1)/(255-black1);
+
+            return new Double[] {cyan,magenta,yellow,black};
+        } else {
+            double cyan = 255 - red;
+            double magenta = 255 - green;
+            double yellow = 255 - blue;
+            return new Double[] {cyan,magenta,yellow,black};
+        }
     }
 }
